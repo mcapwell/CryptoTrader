@@ -1,0 +1,144 @@
+﻿<html> 
+<head> 
+<title>Google charts</title> 
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+	  var chartOptions;
+	  var chart;
+	  var data;
+
+  function drawChart() {
+  
+	data = new google.visualization.DataTable();
+	data.addColumn('datetime', 'Time of Day'); // Implicit domain label col.
+	data.addColumn('number', 'low'); // Implicit series 1 data col.
+	data.addColumn('number', 'open'); // Implicit series 2 data col.
+	data.addColumn('number', 'close'); // Implicit series 3 data col.
+	data.addColumn('number', 'high'); // Implicit series 4 data col.
+	data.addColumn('number', 'extr'); // Implicit series 5 data col.
+	data.addColumn({type:'string', role:'annotation'}); // annotation role col.
+	data.addRows([
+		[new Date(2018, 04, 11, 04, 55),6844.68,6844.68, 6846,6846.68,6847,null],
+		[new Date(2018, 04, 11, 05, 0),6845,    6846.68, 6845,6847,6852,null],
+		[new Date(2018, 04, 11, 05, 5),6847,    6847,    6847,6852,6852,null],
+		[new Date(2018, 04, 11, 05, 10),6847,   6850,    6850,6852,6852,null],
+		[new Date(2018, 04, 11, 05, 15),6850,   6850,    6852,6852,6852,'hey'],
+		[new Date(2018, 04, 11, 05, 20),6847,   6852,    6847,6852,6855,null],
+		[new Date(2018, 04, 11, 05, 25),6847,   6852,    6854,6855,6855,null],
+		[new Date(2018, 04, 11, 05, 30),6845,   6854,    6845,6854,6854,null],
+		[new Date(2018, 04, 11, 05, 35),6845,   6850,    6855,6860,6840,null]
+	]);  
+
+	chartOptions = {
+		title: 'Nearby galaxies', subtitle: 'distance on the left, brightness on the right',
+		legend: 'distance',
+		displayAnnotations: true,
+		bar: { groupWidth: '80%' }, // Remove space between bars.
+		candlestick: {
+			fallingColor: { strokeWidth: 1, stroke: '#a52714', fill: '#a52714' }, // red
+			risingColor: { strokeWidth: 1, stroke: '#0f9d58', fill: '#0f9d58' }   // green
+		},
+		hAxis: {
+			gridlines: {
+				count: 9
+				//units: {
+				//	days: {format: ['MMM dd']},
+				//	hours: {format: ['HH:mm', 'ha']},
+				//	minutes: {format: ['HH:mm a Z', ':mm']}
+				//}
+			}
+		},
+		seriesType: 'candlesticks',
+      	series: {
+	  0: { labelInLegend : 'none', color: '#0f9d58' },
+      	  1: { type: 'line', color: '#0f1d58', dataOpacity: 0, areaOpacity: 0, visibleInLegend: false, lineWidth: 0, annotations: { style: 'line', stem: { color: '0f1d58', length: 50, style: 'line'}, textStyle: {fontSize: 16, color: 'blue' } } }}
+	};
+    
+    chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+
+    chart.draw(data, chartOptions);
+    //window.addEventListener('resize', watch, false);
+    addEvent(window, 'resize', watch, true);
+  }
+  function _ChartDataUpdate(jsonData, chart_label) {
+    data = new google.visualization.DataTable(jsonData);
+    chartOptions.title = chart_label;
+    chart.draw(data, chartOptions);
+  }  
+/*
+    function: addEvent
+
+    @param: obj         (Object)(Required)
+
+        -   The object which you wish
+            to attach your event to.
+
+    @param: type        (String)(Required)
+
+        -   The type of event you
+            wish to establish.
+
+    @param: callback    (Function)(Required)
+
+        -   The method you wish
+            to be called by your
+            event listener.
+
+    @param: eventReturn (Boolean)(Optional)
+
+        -   Whether you want the
+            event object returned
+            to your callback method.
+*/
+var addEvent = function(obj, type, callback, eventReturn)
+{
+    if(obj == null || typeof obj === 'undefined')
+        return;
+
+    if(obj.addEventListener)
+        obj.addEventListener(type, callback, eventReturn ? true : false);
+    else if(obj.attachEvent)
+        obj.attachEvent("on" + type, callback);
+    else
+        obj["on" + type] = callback;
+};
+
+var watch = function(evt)
+{
+    /*
+        Older browser versions may return evt.srcElement
+        Newer browser versions should return evt.currentTarget
+    */
+    var dimensions = {
+        height: (evt.srcElement || evt.currentTarget).innerHeight,
+        width: (evt.srcElement || evt.currentTarget).innerWidth
+    };
+    var chart_div = document.getElementById('chart_div');
+
+	/*var resizeEvent = document.createEvent("HTMLEvents");
+    resizeEvent.initEvent("resize", false, true);
+    var propagate = chart_div.dispatchEvent(resizeEvent);*/
+
+    chart_div.style.height = dimensions.height;
+    //chart_div.style.width = dimensions.width;
+    chart.draw(data, chartOptions);
+};
+    </script>
+</head>  
+<body style="width: 100%; height: 100%">
+<script type="text/javascript"> 
+// Для вызова из 1С
+function ChartDataUpdate(jsonData, chart_label) 
+{ 
+	return _ChartDataUpdate(jsonData, chart_label); 
+}; 
+</script> 
+
+<div id="chart_div" style="width: 100%; height: 480px"></div>
+</body> 
+</html>
