@@ -22,7 +22,7 @@
   <modalityUseMode>DontUse</modalityUseMode>
   <synchronousExtensionAndAddInCallUseMode>DontUse</synchronousExtensionAndAddInCallUseMode>
   <synchronousPlatformExtensionAndAddInCallUseMode>DontUse</synchronousPlatformExtensionAndAddInCallUseMode>
-  <compatibilityMode>8.3.10</compatibilityMode>
+  <compatibilityMode>8.3.11</compatibilityMode>
   <languages uuid="17f58b8f-2153-41b8-9dfa-f1b7b58de6ef">
     <name>Русский</name>
     <synonym>
